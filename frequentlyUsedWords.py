@@ -12,8 +12,7 @@
 #
 
 # 'content' indicates the string with the text
-# and 'number_of_words' is how many of them user wants
-# to be listed.
+# and 'number_of_words' is how many of should be returned
 def get_words (content, number_of_words):
 
 	# Creates a list called 'words' by splitting the content string.
@@ -27,18 +26,35 @@ def get_words (content, number_of_words):
 	# the values being how many times they are used.
 	word_dict = {}
 
-	# Prevents differentation of same the words at the
+	# Prevents differentation of the same words at the
 	# beginning/middle of the sentence or at the end.
 	special_characters_to_remove = ".,?/'\"!@#$&"
+
+	# Removing common words of preposition, conjunction, etc. from the result.
+	words_to_remove = ['or','a','an','the','and','i','we','you','he','she','it','about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'at',
+'because of', 'before', 'behind', 'below', 'beneath', 'beside', 'besides', 'between',
+'beyond', 'but', 'by', 'concerning', 'despite', 'down', 'during', 'except', 'excepting',
+'for', 'from', 'in', 'in front of', 'inside', 'in spite of', 'instead of', 'into',
+'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 'over', 'past', 'regarding',
+'since', 'through', 'throughout', 'to', 'toward', 'under', 'underneath', 'until', 'up',
+'upon', 'up to', 'with', 'within', 'without', 'with regard to', 'with respect to', 'is', 'are']
 
 	# Omitting the special characters from words in the 'words' list.
 	for i in range(len(words)):
 		for char in special_characters_to_remove:
 			words[i] = words[i].replace(char, '')
 
-	# Registering the words to a dictionary with the count of 0.
-	for i in range(len(words)):
-		word_dict[words[i]] = 0
+	words_temp = []
+
+	# Registering the words to a dictionary, excluding the words of
+	# 'words_to_remove' list, with the count of 0.
+	for i in words:
+		if i not in words_to_remove:
+			words_temp.append(i)
+			word_dict[i] = 0
+
+	# Regenerating words list without the words of 'word_to_remove'
+	words = words_temp
 	
 	# The counting happens here
 	for i in range(len(words)):
@@ -47,13 +63,12 @@ def get_words (content, number_of_words):
 				word_dict[words[i]] += 1
 				words[i] = None
 
+	word_dict_keys = sorted(word_dict.keys())
+	word_dict_values = sorted(word_dict.values(), reverse = True)
+	
+	word_dict_final = {}
 
-	a = 0
+	for i in range(number_of_words):
+		word_dict_final[word_dict_keys[i]] = word_dict_values[i]
 
-	# Printing the words with the amount user wants.
-	for i in sorted (word_dict):
-		if a < number_of_words:
-			print(i, ":", word_dict[i], end = "\n")
-			a += 1
-		else:
-			break
+	return word_dict_final
