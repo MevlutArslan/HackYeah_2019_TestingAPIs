@@ -5,6 +5,7 @@ sys.path.append("/home/memreyagci/Desktop/HackYeah_2019")
 import frequentlyUsedWords
 import urllib.request
 
+
 newsapi = NewsApiClient(api_key = '493f8ac4bc004885acb60e8c7db2f25c')
 
 # Getting the news' link from the user
@@ -33,6 +34,7 @@ link_words = link_headline + " " + link_content
 
 # Creating a list consists of words used in the news 5 or more times
 most_used_words = frequentlyUsedWords.get_words(link_words)
+
 
 # Searching the news (in the same website to check its accuracy)
 find_news = newsapi.get_everything(q = most_used_words, sources = 'bbc-news', from_param='2019-08-20', to='2019-08-23')
