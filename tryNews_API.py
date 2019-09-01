@@ -24,11 +24,12 @@ for i in target_DIV:
         target_STR += parag.text
 
 #save the text to an external file
+'''
 def saveToExternalFile(string,filename):
         text_file = open(filename,'w')
         text_file.write(string)
         text_file.close()
-
+'''
 #cleaning up the text for better analysis
 stopWords = ['or','a','an','the','and','i','we','you','he','she','it','about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'at',
   'because of', 'before', 'behind', 'below', 'beneath', 'beside', 'besides', 'between',
