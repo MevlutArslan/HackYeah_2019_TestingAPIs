@@ -2,15 +2,13 @@ from newsapi import NewsApiClient
 import bs4 as bs
 import urllib.request
 
-import re
-
 newsapi = NewsApiClient(api_key='c3ef595ba6414146b09332ae73cdf0eb')
 
 
 target = newsapi.get_everything(q='amazon-g7-fund',sources='bbc-news',from_param='2019-08-20', to='2019-08-23')
 
 
-target_URL = target['articles'][0]['url']
+target_URL = 'https://www.bbc.com/news/world-asia-china-49540751'
 
 source = urllib.request.urlopen(target_URL)
 
@@ -40,7 +38,7 @@ stopWords = ['or','a','an','the','and','i','we','you','he','she','it','about', '
   'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 'over', 'past', 'regarding',
   'since', 'through', 'throughout', 'to', 'toward', 'under', 'underneath', 'until', 'up',
   'upon', 'up to', 'with', 'within', 'without', 'with regard to', 'with respect to','mr','was','said','the','is','','has','that',
-  'have','this','are','be','also','not','which']
+  'have','this','are','be','also','not','which','-','were','they','had']
 
 clean_Text = target_STR.split(' ')
 
@@ -73,7 +71,6 @@ word_Count = tuple((zip(words,wordFreq)))
   #word_Count[i][j]   i represents the index of the entire tuple j represents the elements inside that tuple
 most_Repeated = []
 
-print(word_Count)
 
 for i in range(len(word_Count)):
                 if word_Count[i][1] >= 5:
@@ -81,9 +78,13 @@ for i in range(len(word_Count)):
 
 print("-------------------------------------------------------------------------")
 
+
+
 to_SEARCH = ""
 #remove duplicate results from mostRepeated
 most_Repeated = list(set(most_Repeated))
+
+print(most_Repeated)
 
 for i in range(len(most_Repeated)):
         if most_Repeated[i] != most_Repeated[-1]:
@@ -92,10 +93,11 @@ for i in range(len(most_Repeated)):
                 to_SEARCH += most_Repeated[i][0]
 
 #trying to see if the most used words can get us the exact article
-target2 = newsapi.get_everything(q=to_SEARCH,sources='bbc-news',from_param='2019-08-20', to='2019-08-23')
-print(target2)
-print("----------------------------------")
-print(target)
+target2 = newsapi.get_everything(q=to_SEARCH,sources='associated-press', from_param='2019-08-20', to='2019-08-23')
+print(target2['articles'])
+#print("----------------------------------")
+#print(target)
 
 #it kinda works :)
+
 
