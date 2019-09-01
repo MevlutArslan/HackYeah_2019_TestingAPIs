@@ -66,14 +66,10 @@ def getWordFreq(words):
 def pairTwoLists(list1,list2):
         return tuple((zip(list1,list2)))
 
-
-
 #remove duplicate results from mostRepeated
 
 def removeDuplicates(arr):
         return list(set(arr))
-
-
 
 
 def querifyString():
