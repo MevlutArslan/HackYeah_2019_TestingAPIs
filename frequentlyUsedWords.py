@@ -8,12 +8,11 @@
 # import sys
 # sys.path.append("location of the module goes here (with the quotes)")
 #
-# import word_counter
+# import frequentlyUsedWords
 #
 
-# 'content' indicates the string with the text
-# and 'number_of_words' is how many of should be returned
-def get_words (content, number_of_words):
+# 'content' indicates the string with the text 
+def get_words (content):
 
 	# Creates a list called 'words' by splitting the content string.
 	# Making all the letters lower case prevents the module from
@@ -28,7 +27,7 @@ def get_words (content, number_of_words):
 
 	# Prevents differentation of the same words at the
 	# beginning/middle of the sentence or at the end.
-	special_characters_to_remove = ".,?/'\"!@#$&"
+	special_characters_to_remove = """,?./'"!@#$&"""
 
 	# Removing common words of preposition, conjunction, etc. from the result.
 	words_to_remove = ['or','a','an','the','and','i','we','you','he','she','it','about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'at',
@@ -37,12 +36,15 @@ def get_words (content, number_of_words):
 'for', 'from', 'in', 'in front of', 'inside', 'in spite of', 'instead of', 'into',
 'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 'over', 'past', 'regarding',
 'since', 'through', 'throughout', 'to', 'toward', 'under', 'underneath', 'until', 'up',
-'upon', 'up to', 'with', 'within', 'without', 'with regard to', 'with respect to', 'is', 'are']
+'upon', 'up to', 'with', 'within', 'without', 'with regard to', 'with respect to', 'is', 'are', '-', 's', 'they',
+'were', 'had']
 
 	# Omitting the special characters from words in the 'words' list.
 	for i in range(len(words)):
 		for char in special_characters_to_remove:
-			words[i] = words[i].replace(char, '')
+			words[i] = words[i].replace(char, ' ')
+
+	words = ' '.join(words).split()
 
 	words_temp = []
 
@@ -60,15 +62,16 @@ def get_words (content, number_of_words):
 	for i in range(len(words)):
 		for b in range(len(words)):
 			if words[i] == words[b]:
-				word_dict[words[i]] += 1
-				words[i] = None
+				word_dict[words[b]] += 1
+				words[b] = None
 
-	word_dict_keys = sorted(word_dict.keys())
-	word_dict_values = sorted(word_dict.values(), reverse = True)
+	# A string created since the 'q' parameter of newsapi requires a string
+	word_str = ''
 	
-	word_dict_final = {}
+	# Checking if a word is used 5 or more times, and if yes, regitering
+	# it to 'word_str'
+	for i in range(len(word_dict)):
+		if list(word_dict.values())[i] >= 5:
+			word_str += list(word_dict.keys())[i] + " "
 
-	for i in range(number_of_words):
-		word_dict_final[word_dict_keys[i]] = word_dict_values[i]
-
-	return word_dict_final
+	return word_str
