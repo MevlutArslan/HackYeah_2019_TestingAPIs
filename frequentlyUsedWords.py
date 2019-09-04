@@ -37,7 +37,7 @@ def get_words (content):
 'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 'over', 'past', 'regarding',
 'since', 'through', 'throughout', 'to', 'toward', 'under', 'underneath', 'until', 'up',
 'upon', 'up to', 'with', 'within', 'without', 'with regard to', 'with respect to', 'is', 'are', '-', 's', 'they',
-'were', 'had', "--", "was", "as", "told", "said", "no", "that", "re"]
+'were', 'had', "--", "was", "as", "told", "said", "no", "that", "re", "been"]
 
 	# Omitting the special characters from words in the 'words' list.
 	for i in range(len(words)):
