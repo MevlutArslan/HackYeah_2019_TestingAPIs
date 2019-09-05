@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import urllib.request
+import nltk
 
 class Article:
     def __init__(self, linkUser):
@@ -46,7 +47,7 @@ class Article:
 
         # Getting the content 
         for c_tag in soup.find_all(class_ = website_detected["content_tag"]):
-            if linkUser["content_tag_2"] == None:
+            if website_detected["content_tag_2"] == None:
                 link_content += c_tag.text
             else:
                 for c_tag_2 in c_tag.find_all(website_detected["content_tag_2"]):
@@ -83,4 +84,3 @@ class Article:
 article = Article(input("Please enter the link: "))
 article.webScrap()
 article.cleanText()
-
