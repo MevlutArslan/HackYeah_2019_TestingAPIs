@@ -1,86 +1,125 @@
 from bs4 import BeautifulSoup
 import urllib.request
 import nltk
+from textblob import TextBlob
+
+
+class Source:
+    def __init__(self,url,headerTag,bodyTag,):
+        self.url = url
+        self.headerTag = headerTag
+        self.bodyTag = bodyTag
 
 class Article:
     def __init__(self, linkUser):
         self.linkUser = linkUser
-    '''
-    def webScrap():
-        s
-    '''
 
     def webScrap(self):
+        #things I need to do in this function :
+         #Detect the web source (example : is it bbc/associated press/abc/al jazeera)
+         #Assign variables to it
+        bbc = Source('https://www.bbc.com/','story-body__h1','story-body__inner')
+        ap = Source('https://apnews.com/','headLine','Article')
+        abc = Source('https://abcnews.go.com/','article-header','article-copy')
+        washPost = Source('https://www.washingtonpost.com/','topper-headline','article-body')
+        websites = [bbc,ap,abc,washPost]
+        currentWebsite = ''
 
-        newsSources = {
-"BBC News": {"id" : "bbc-news", "url" : "bbc.co.uk", "headline_tag" : "story-body__h1", "headline_tag_2" : None, "content_tag" : "story-body__inner", "content_tag_2" : "p"},
-"ABC News": {"id" : "abc-news", "url" : "abcnews.go.com", "headline_tag" : "article-header", "headline_tag_2" : "h1", "content_tag" : "article-copy", "content_tag_2" : "p"},
-"The Wall Street Journal": {"id" : "the-wall-street-journal", "url" : "wsj.com", "headline_tag" : "bigTop__hed", "headline_tag_2" : None, "content_tag" : "wsj-snippet-body", "content_tag_2" : "p"}
-}
-        linkUser = self.linkUser
 
-        website_detected = {}
+        self.header = ' '
+        self.textBody = ' '
 
-        # A module that detects which website the link sent by the user belongs.
-        # The parameter "link_user" is the link provided by user.
-        for i in list(newsSources.keys()):
-            if newsSources[i]["url"] in linkUser:
-                website_detected = newsSources[i]
-                break
-        print(website_detected["content_tag_2"])
 
-        # Headline and content of the news
-        link_headline = ''
-        link_content = ''
+        def findWebsite():
+            from urllib.parse import urlparse
+            parsed_uri = urlparse(self.linkUser)
+            result = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+            return (result)
 
-        # Getting source of the link
-        x = urllib.request.urlopen(linkUser)
-        soup = BeautifulSoup(x,'lxml')
+        def scrap():
+            for website in websites:
+                if website.url == findWebsite():
+                    currentWebsite = website
 
-        # Getting the content headline 
-        for h_tag in soup.find_all(class_ = website_detected["headline_tag"]):
-            if website_detected["headline_tag_2"] == None:
-                link_headline += h_tag.text
-            else:
-                for h_tag_2 in h_tag.find_all(website_detected["headline_tag_2"]):
-                    link_headline += h_tag_2.text
+            source = urllib.request.urlopen(self.linkUser)
+            soup = BeautifulSoup(source,'lxml')
 
-        # Getting the content 
-        for c_tag in soup.find_all(class_ = website_detected["content_tag"]):
-            if website_detected["content_tag_2"] == None:
-                link_content += c_tag.text
-            else:
-                for c_tag_2 in c_tag.find_all(website_detected["content_tag_2"]):
-                    link_content += c_tag_2.text
+            headDiv = soup.find_all('div',attrs={'class': currentWebsite.headerTag})
+            bodyDiv = soup.find_all('div',attrs={'class': currentWebsite.bodyTag})
 
-        link_words = link_headline + " " + link_content
+            for x in headDiv:
+                for head in x.find_all('h1'):
+                    self.header += head.text
+            
+            for x in bodyDiv:
+                for parag in x.find_all('p'):
+                    self.textBody += parag.text + ' '
 
-        self.link_headline = link_headline
-        self.link_content = link_content
-        self.link_words = link_words
+        scrap()
+        
+        # = soup.findAll('div',attrs={'class':})
+
 
     def cleanText(self):
         self.stopWords = ['or','a','an','the','and','i','we','you','he','she','it','about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'at',
-'because of', 'before', 'behind', 'below', 'beneath', 'beside', 'besides', 'between',
-'beyond', 'but', 'by', 'concerning', 'despite', 'down', 'during', 'except', 'excepting',
-'for', 'from', 'in', 'in front of', 'inside', 'in spite of', 'instead of', 'into',
-'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 'over', 'past', 'regarding',
-'since', 'through', 'throughout', 'to', 'toward', 'under', 'underneath', 'until', 'up',
-'upon', 'up to', 'with', 'within', 'without', 'with regard to', 'with respect to', 'is', 'are', '-', 's', 'they',
-'were', 'had', "--", "was", "as", "told", "said", "no", "that", "re", "been", "but", "not", "would"]
+        'because of', 'before', 'behind', 'below', 'beneath', 'beside', 'besides', 'between',
+        'beyond', 'but', 'by', 'concerning', 'despite', 'down', 'during', 'except', 'excepting',
+        'for', 'from', 'in', 'in front of', 'inside', 'in spite of', 'instead of', 'into',
+        'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 'over', 'past', 'regarding',
+        'since', 'through', 'throughout', 'to', 'toward', 'under', 'underneath', 'until', 'up',
+        'upon', 'up to', 'with', 'within', 'without', 'with regard to', 'with respect to', 'is', 'are', '-', 's', 'they',
+        'were', 'had', "--", "was", "as", "told", "said", "no", "that", "re", "been", "but", "not", "would"]
         from nltk import tokenize
         from nltk.corpus import stopwords
+        self.webScrap()
 
-        self.wordList = tokenize.word_tokenize(self.link_words)
+
+        self.wordList = tokenize.word_tokenize(self.textBody)
         for x in range(len(self.wordList)):
             self.wordList[x] = self.wordList[x].lower()
-        self.sentenceList = tokenize.sent_tokenize(self.link_words)
-        self.cleaned_List = [x for x in self.wordList if not x in self.stopWords]
+        self.sentenceList = tokenize.sent_tokenize(self.textBody)
+        self.cleaned_List = []
 
-        print(self.cleaned_List)
+        for i in range(len(self.wordList)):
+            if self.wordList[i] != self.stopWords:
+                self.cleaned_List.append(self.wordList[i])
 
+        
+
+    def opinion_fact_Check(self):
+        self.isOpinion = False
+        opinions = []
+        facts = []
+        for x in self.sentenceList:
+            textBlob = TextBlob(x)
+            if textBlob.sentiment.subjectivity > 0.5:
+                opinions.append(x)
+            if textBlob.sentiment.subjectivity < 0.5:
+                facts.append(x)
+        average = len(opinions) / len(facts)
+
+        if average > 0.5:
+            self.isOpinion = True
+    
+    #def topicModelling(self):
+        
+    #change the name
+    #def mainAlgorithm(self):
+        #Things to consider
+         #Objectivity or subjectivity
+         #Amount of equal unique words
+         #Authors score
+         #key words (maybe)
+         #header
+         #websites score
+         #topic modelling results
 
 
 article = Article(input("Please enter the link: "))
-article.webScrap()
+
 article.cleanText()
+article.opinion_fact_Check()
+print(article.isOpinion)
+
+
+
