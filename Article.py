@@ -3,17 +3,17 @@ import urllib.request
 import nltk
 from textblob import TextBlob
 
-
 class Source:
     def __init__(self,url,headerTag,bodyTag,):
         self.url = url
         self.headerTag = headerTag
         self.bodyTag = bodyTag
-        
+
 # Class that handles with detecting the website, getting headline & content, seperating them to words -excluding stop words, and deciding whether it is an opinion or a fact article.
 class Article:
     def __init__(self, linkUser):
         self.linkUser = linkUser
+
 
     def webScrap(self):
         #things I need to do in this function :
@@ -36,7 +36,7 @@ class Article:
             parsed_uri = urlparse(self.linkUser)
             result = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
             return (result)
-        
+
         # Getting content and headline
         def scrap():
             for website in websites:
