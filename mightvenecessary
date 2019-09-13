@@ -1,0 +1,16 @@
+    def getKeywords(self):
+        from rake_nltk import Rake
+        import string
+        #self.textBody.strip(string.punctuation)
+        r = Rake(stopwords=self.stopWords)
+        r.extract_keywords_from_text(self.textBody)
+        #change the name 
+        array = r.get_ranked_phrases_with_scores()
+        kwstr = ''
+
+        for x in range(len(array)):
+            if array[x][0] >= 8.5:
+                kwstr += array[x][1] + ' '
+        kwstr = ''.join(c for c in kwstr if c not in string.punctuation)
+        #print(kwstr)
+        return kwstr

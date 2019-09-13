@@ -50,9 +50,9 @@ text_file.close()
 
 # Creating a list consists of words used in the news 5 or more times
 most_used_words = frequentlyUsedWords.get_words(link_words)
-
+print(most_used_words)
 # Searching the news in different websites and printing them
 for i in range(len(detectNews.url)):
 	if website_detected["id"] != detectNews.url[list(detectNews.url)[i]]["id"]:
-		print(newsapi.get_everything(q = most_used_words, sources = detectNews.url[list(detectNews.url)[i]]["id"], from_param='2019-09-01', to='2019-09-03'), "\n"
+		print(newsapi.get_everything(q = most_used_words, sources = detectNews.url[list(detectNews.url)[i]]["id"], from_param='2019-09-11', to='2019-09-13'), "\n"
 			)
