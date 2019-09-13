@@ -15,7 +15,7 @@ class Article:
         self.urls = urls
         self.websites = {
         "BBC News": {"id" : "bbc-news", "url" : "bbc.co.uk", "headline_tag" : "story-body__h1", "headline_tag_2" : None, "content_tag" : "story-body__inner", "content_tag_2" : "p", "date_tag_type" : "attribute", "date_tag" : "div", "date_tag_2": "data-datetime", "date_format": "%d %B %Y"},
-        "ABC News": {"id" : "abc-news", "url" : "abcnews.go.com", "headline_tag" : "article-header", "headline_tag_2" : "h1", "content_tag" : "article-copy", "content_tag_2" : "p", "date_tag_type" : "no-attribute", "date_tag": "timestamp", "date_tag_2": None, "date_format": "%b %d, %Y, %I:%M %p ET"},
+        "ABC News": {"id" : "abc-news", "url" : "abcnews.go.com", "headline_tag" : "article-header", "headline_tag_2" : "h1", "content_tag" : "article-copy", "content_tag_2" : "p", "date_tag_type" : "no-attribute", "date_tag": "timestamp", "date_tag_2": None, "date_format": " %b %d, %Y, %I:%M %p ET"},
         "The Washington Post": {"id" : "the-washington-post", "url" : "washingtonpost.com", "headline_tag" : "topper-headline", "headline_tag_2" : None, "content_tag" : "article-body", "content_tag_2" : "p", "date_tag_type" : "attribute", "date_tag": "span", "date_tag_2": "content", "date_format": "%Y-%m-%dT%I:%M-500"},
         "AP News": {"id" : "associated-press", "url" : "apnews.com", "headline_tag" : "headline", "headline_tag_2" : None, "content_tag" : "Article", "content_tag_2" : "p", "date_tag_type" : "attribute", "date_tag": "span", "date_tag_2": "data-source", "date_format": "%Y-%m-%dT%H:%M:%SZ"}
         }
@@ -90,6 +90,8 @@ class Article:
             newWords.append(''.join(c for c in x if c not in string.punctuation))
         self.cleaned_List = newWords
 
+        return self.cleaned_List
+
     def opinion_fact_Check(self):
         self.isOpinion = False
         opinions = []
@@ -114,9 +116,9 @@ class Article:
                 sources = "bbc-news, abc-news, the-washington-post, associated-press",
                 from_param = str(self.articleDate),
                 to = str(self.articleDate + datetime.timedelta(days = 2))) , "\n\n\n")
-
+        
         self.compareTo = []
-        for x in range(len(result[0])):
+        for x in range(result[0]["totalResults"]):
             self.compareTo.append(result[0]["articles"][x]["url"])
 
 
@@ -135,7 +137,7 @@ class Article:
         #DTM.to_csv('dTM.csv')
 
     def getDict(self):
-        words = self.cleaned_List
+        words = self.cleanText()
         words_temp = []
         word_dict = {}
 
@@ -170,6 +172,7 @@ class Article:
         self.cleaned_headline = [x for x in self.header if not x in self.stopWords]
         for x in self.cleaned_headline:
             self.word_str += x + " "
+
 
 
     def __str__(self):
